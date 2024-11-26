@@ -18,7 +18,7 @@ PNG Wizard es una herramienta en línea sencilla y rápida para convertir imáge
 
 1. **Clona el repositorio:**
    ```bash
-   git clone https://github.com/AlejandroRodrigezBravo/Proyecto.git
+   git clone https://github.com/alejandroAI23/PNG_Wizard_Project.git
 
 
 Navega al directorio del proyecto y abre el archivo index.htmlen tu navegador.
