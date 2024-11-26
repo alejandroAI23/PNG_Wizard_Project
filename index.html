@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNG Wizard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>PNG Wizard</h1>
+        <p>Convierte tus archivos de imagen a formato PNG rápidamente y sin complicaciones.</p>
+    </header>
+
+    <main>
+        <section id="upload-section">
+            <h2>Arrastra y suelta tu archivo</h2>
+            <p>O haz clic para seleccionar una imagen desde tu dispositivo.</p>
+            <div id="drop-zone">
+                <p>Arrastra y suelta aquí</p>
+                <input type="file" id="file-input" accept="image/*" multiple>
+            </div>
+            <button id="convert-btn">Convertir a PNG</button>
+        </section>
+        <section id="output-section">
+            <h3>Archivos Convertidos:</h3>
+            <div id="output"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Desarrollado por Alejandro Rodríguez Bravo. Programador desde 2018.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
