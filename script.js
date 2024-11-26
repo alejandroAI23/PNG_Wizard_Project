@@ -29,7 +29,11 @@ fileInput.addEventListener('change', (e) => {
 });
 
 function handleFiles(files) {
-    uploadedFiles = files.filter(file => file.type.startsWith('image/') || file.name.endsWith('.heic'));
+    uploadedFiles = files.filter(file => {
+        // Aceptar archivos de imagen estándar y .heic
+        return file.type.startsWith('image/') || file.name.toLowerCase().endsWith('.heic');
+    });
+
     if (uploadedFiles.length > 0) {
         alert(`${uploadedFiles.length} archivo(s) cargado(s). Listo para convertir.`);
     } else {
@@ -55,20 +59,18 @@ convertButton.addEventListener('click', () => {
 });
 
 function convertHeicToPng(file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        heic2any({
-            blob: file,
-            toType: "image/png",
-        }).then((convertedBlob) => {
-            const url = URL.createObjectURL(convertedBlob);
-            displayResult(url, `${file.name.split('.')[0]}.png`);
-        }).catch((err) => {
-            console.error('Error al convertir HEIC:', err);
-            alert('Hubo un problema al convertir el archivo HEIC.');
-        });
-    };
-    reader.readAsArrayBuffer(file);
+    heic2any({
+        blob: file,
+        toType: "image/png",
+    })
+    .then((convertedBlob) => {
+        const url = URL.createObjectURL(convertedBlob);
+        displayResult(url, `${file.name.split('.')[0]}.png`);
+    })
+    .catch((err) => {
+        console.error('Error al convertir archivo HEIC:', err);
+        alert('Hubo un problema al convertir el archivo HEIC. Inténtalo de nuevo.');
+    });
 }
 
 function processImageFile(file) {
