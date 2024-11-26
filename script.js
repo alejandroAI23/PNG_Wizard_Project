@@ -29,11 +29,11 @@ fileInput.addEventListener('change', (e) => {
 });
 
 function handleFiles(files) {
-    uploadedFiles = files.filter(file => file.type.startsWith('image/'));
+    uploadedFiles = files.filter(file => file.type.startsWith('image/') || file.name.endsWith('.heic'));
     if (uploadedFiles.length > 0) {
         alert(`${uploadedFiles.length} archivo(s) cargado(s). Listo para convertir.`);
     } else {
-        alert('Por favor, carga solo archivos de imagen.');
+        alert('Por favor, carga solo archivos de imagen (.jpg, .png, .heic, etc.).');
     }
 }
 
@@ -46,23 +46,48 @@ convertButton.addEventListener('click', () => {
     output.innerHTML = ''; // Limpia los resultados previos
 
     uploadedFiles.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const img = new Image();
-            img.onload = function () {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                const pngUrl = canvas.toDataURL('image/png');
-                displayResult(pngUrl, `${file.name.split('.')[0]}.png`);
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        if (file.name.endsWith('.heic')) {
+            convertHeicToPng(file);
+        } else {
+            processImageFile(file);
+        }
     });
 });
+
+function convertHeicToPng(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        heic2any({
+            blob: file,
+            toType: "image/png",
+        }).then((convertedBlob) => {
+            const url = URL.createObjectURL(convertedBlob);
+            displayResult(url, `${file.name.split('.')[0]}.png`);
+        }).catch((err) => {
+            console.error('Error al convertir HEIC:', err);
+            alert('Hubo un problema al convertir el archivo HEIC.');
+        });
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function processImageFile(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const pngUrl = canvas.toDataURL('image/png');
+            displayResult(pngUrl, `${file.name.split('.')[0]}.png`);
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
 
 function displayResult(dataUrl, filename) {
     const container = document.createElement('div');
